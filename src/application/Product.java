@@ -58,6 +58,13 @@ public abstract class Product implements Comparable<Product>{
 		
 	}
 
+	
+	public Product(String name, int stock) {
+		
+		this.name = name;
+		this.stock = stock;
+	}
+
 	/*
 	 * Copy constructor for product
 	 */
@@ -80,15 +87,14 @@ public abstract class Product implements Comparable<Product>{
 	 * to string method
 	 */
 	public String toString() {
-		DecimalFormat df = new DecimalFormat("#.00");
-		return this.name + " - $" + df.format(this.price);
+		return this.getName();
 	}
 
 	/*
 	 * Setter for name
 	 */
 	public void setName(String name) {
-
+		this.name =name;
 	}
 
 	/*

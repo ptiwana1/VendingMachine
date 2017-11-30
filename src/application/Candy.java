@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
@@ -18,7 +19,9 @@ import javafx.scene.text.Text;
 
 public class Candy extends Snack {
 	
-	
+	public static  Global_Inventory_Management inventory = new Global_Inventory_Management();
+	static Product Kisses = null;
+	static Product payDay = null;
 	// copy Constructor for candy
 	public Candy(Candy c) {
 		super(c);
@@ -36,12 +39,12 @@ public class Candy extends Snack {
 	
 	// toString method 
 	public String toString() {
-		return super.toString();
+		return "Candies";
 	}
 	
 	
 	//Creating a screen to display available candies 
-    public  VBox CandyScreen()
+    public  static VBox CandyScreen()
     {
     		VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
@@ -54,7 +57,7 @@ public class Candy extends Snack {
         //Assigning a button to candy payday
         Button payday = new Button("Pay Day");
         //aDDING an image of payday candy to the button
-        Image imagepayday = new Image("./images/payday.jpg");
+        Image imagepayday = new Image("./application/images/payday.jpg");
 		ImageView imageViewpayday = new ImageView(imagepayday);
 		imageViewpayday.setFitHeight(100);
 		imageViewpayday.setFitWidth(100);
@@ -68,16 +71,17 @@ public class Candy extends Snack {
 		
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockCandyPayday > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.CandyPayday.getStock() > 0)
 					{
 						// Creating object of new candy payday
-						Candy payDay = new Candy();
-						payDay.name = "Pay Day";
+					    payDay = new Candy();
+						payDay.name = "PayDay";
 						payDay.setPrice(1.67f);
 						Main.stacklist.push(payDay);
 						//Calling the stock method of Inventory class to decrease the stock of candy payday by 1
-						Main.inventory.stock("payday");
+						inventory.stock(payDay);
 					}
 					else
 					{
@@ -88,7 +92,8 @@ public class Candy extends Snack {
 						alert.showAndWait();
 					}			   
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second event handler; changing the background color of button to yellow on double click
+				else if(button==MouseButton.SECONDARY){
             		payday.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -112,15 +117,16 @@ public class Candy extends Snack {
 
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockCandyKisses > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.CandyKisses.getStock() > 0)
 					{
 					// TODO Auto-generated method stub
-					Candy Kisses = new Candy();// creating object of new candy kisses
+					Kisses = new Candy();// creating object of new candy kisses
 					Kisses.name = "Kisses";
 					Kisses.setPrice(2.59f);
 					Main.stacklist.push(Kisses);
-					Main.inventory.stock("kisses");//Calling the stock method of Inventory class to decrease the stock of candy kisses by 1
+					inventory.stock(Kisses);//Calling the stock method of Inventory class to decrease the stock of candy kisses by 1
 					}
 					
 					else // creating a alert box for out of stock
@@ -133,7 +139,8 @@ public class Candy extends Snack {
 						alert.showAndWait();
 					}  
                 }
-            		if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+            		if(button==MouseButton.SECONDARY){
             		kisses.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -168,11 +175,11 @@ public class Candy extends Snack {
             	{
             		if(product.getName() == "Kisses")
             		{
-            			Main.inventory.cancelItem("Kisses");
+            			inventory.cancelItem(Kisses);
             		}
-            		else if(product.getName() == "Pay Day")
+            		else if(product.getName() == "PayDay")
             		{
-            			Main.inventory.cancelItem("Pay Day");
+            			inventory.cancelItem(payDay);
             		}
             	}
             }
@@ -187,7 +194,7 @@ public class Candy extends Snack {
 
             @Override
             public void handle(ActionEvent arg0) {
-                checkOut.getScene().setRoot(Main.checkOut());  // will go to checkout screen when button clocked 
+                checkOut.getScene().setRoot(Dispenser.checkOut());  // will go to checkout screen when button clocked 
             	
             }
         });

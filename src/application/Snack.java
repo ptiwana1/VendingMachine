@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -50,7 +51,7 @@ public abstract class Snack extends Product implements Comparable<Product>
 	static Candy candy = new Candy();
 	static Chips chips = new Chips();
 	
-	public static VBox SnacksScreen()// making new function for snack screen  
+	public static  VBox SnacksScreen()// making new function for snack screen  
     {
     	VBox vBox = new VBox();// creating a new vbox for candy screen
         vBox.setAlignment(Pos.CENTER);// setting alignment
@@ -74,11 +75,14 @@ public abstract class Snack extends Product implements Comparable<Product>
         Chips.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
-            public void handle(MouseEvent  mouseEvent) {
-            	if(mouseEvent.getClickCount() == 1){
+            public void handle(MouseEvent mouseEvent) {
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
             		Chips.getScene().setRoot(chips.ChipsScreen());   // will take to chips screen when chips button is clicked    
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on right click
+
+            	if(button==MouseButton.SECONDARY){
             		Chips.setStyle("-fx-background-color: yellow");
                 }
                 //       
@@ -97,11 +101,14 @@ public abstract class Snack extends Product implements Comparable<Product>
         Gum.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
-            public void handle(MouseEvent  mouseEvent) {
-            	if(mouseEvent.getClickCount() == 1){
+            public void handle(MouseEvent mouseEvent) {
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
             		Gum.getScene().setRoot(gum.GumScreen());// will take to gun screen when gum button is clicked   
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+
+				else if(button==MouseButton.SECONDARY){
             		Gum.setStyle("-fx-background-color: yellow");
                 }
                            
@@ -121,10 +128,13 @@ public abstract class Snack extends Product implements Comparable<Product>
 
             @Override
             public void handle(MouseEvent mouseEvent) {
-            	if(mouseEvent.getClickCount() == 1){
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
             		Candy.getScene().setRoot(candy.CandyScreen());// will take to candy screen when candy button is clicked   
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on right click
+
+				else if(button==MouseButton.SECONDARY){
             		Candy.setStyle("-fx-background-color: yellow");
                 }
                              

@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
@@ -18,7 +19,9 @@ import javafx.scene.text.Text;
 
 public class Drink extends Product implements Comparable<Product>
 {
-
+	public static Global_Inventory_Management inventory = new Global_Inventory_Management();
+	 Product coke = null;
+	 Product sprite = null;
 	private int numberOfOunces;
 	
 	/*
@@ -48,7 +51,7 @@ public class Drink extends Product implements Comparable<Product>
 	 */
 	public String toString() {
 		
-		return super.toString();
+		return "Drinks";
 	}
 	
 	/*
@@ -66,7 +69,7 @@ public class Drink extends Product implements Comparable<Product>
 	}
 	
 	
-public VBox DrinkScreen()// making new fuction drinkscreen for drink class
+public  VBox DrinkScreen()// making new fuction drinkscreen for drink class
     
     {
     	// creating new vbox for drink class
@@ -97,14 +100,15 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
 			
 				@Override
 				public void handle(MouseEvent mouseEvent) {
-					if(mouseEvent.getClickCount() == 1){
-						if(Main.inventory.stockDrinkCoke > 0) {
+					MouseButton button = mouseEvent.getButton();
+					if(button==MouseButton.PRIMARY){
+						if(inventory.DrinkCoke.getStock() > 0) {
 							// TODO Auto-generated method stub
-							Drink coke = new Drink();// creating object of new drink coke
-							coke.name = "Coke";
+							coke = new Drink();// creating object of new drink coke
+							coke.setName("Coke");
 							coke.setPrice(0.99f);// setting coke price
 							Main.stacklist.push(coke);// pushing coke in stack
-							Main.inventory.stock("coke");//Calling the stock method of Inventory class to decrease the stock of drink coke by 1
+							inventory.stock(coke);//Calling the stock method of Inventory class to decrease the stock of drink coke by 1
 						}
 						else
 						{   // creating a alert for out of stock 
@@ -116,7 +120,8 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
 							alert.showAndWait();
 						} 
 	                }
-	            	if(mouseEvent.getClickCount() == 2){
+					//Adding second eventhandler; changing the background color of button to yellow on right click
+					else if(button==MouseButton.SECONDARY){
 	            		Coke.setStyle("-fx-background-color: yellow");
 	                }
 					
@@ -141,15 +146,16 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
 
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockDrinkSprite > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.DrinkSprite.getStock() > 0)
 					{
 					// TODO Auto-generated method stub
 					Drink sprite = new Drink();
 					sprite.name = "Sprite";
 					sprite.setPrice(0.99f);
 					Main.stacklist.push(sprite);
-					Main.inventory.stock("sprite");
+					inventory.stock(sprite);
 					}
 					else
 					{
@@ -161,7 +167,8 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
 						alert.showAndWait();
 					}
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on right click
+				else if(button==MouseButton.SECONDARY){
             		Sprite.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -191,11 +198,11 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
             	{
             		if(product.name == "Coke")
                 	{
-                		Main.inventory.cancelItem("coke");
+                		inventory.cancelItem(coke);
                 	}
                 	else if(product.name == "Sprite")
                 	{
-                		Main.inventory.cancelItem("sprite");
+                		inventory.cancelItem(sprite);
                 	}
             	}         	
             	else
@@ -212,7 +219,7 @@ public VBox DrinkScreen()// making new fuction drinkscreen for drink class
 
             @Override
             public void handle(ActionEvent arg0) {
-                checkOut.getScene().setRoot(Main.checkOut());             
+                checkOut.getScene().setRoot(Dispenser.checkOut());             
             }
         });
         vBox.getChildren().addAll(Coke,Sprite, button, buttonCancel, checkOut);

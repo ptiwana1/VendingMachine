@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -29,7 +30,7 @@ public class Main extends Application {
 	
 	
 	public static BorderPane root = new BorderPane();
-	public static Inventory inventory = new Inventory();
+	
 	public static Stack<Product> stacklist = new Stack<Product>();// making stack of products using product class
 	
 	
@@ -62,8 +63,8 @@ public class Main extends Application {
 		Text text = new Text("Please choose from snack or drink ");
 		text.setFill(Color.web("YELLOW"));// setting color
 		text.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 24));// setting fonts
-		BorderPane.setAlignment(text, Pos.CENTER);// setting possition for the borderpane
-		root.setTop(text);// setting possition to title
+		BorderPane.setAlignment(text, Pos.CENTER);// setting position for the borderpane
+		root.setTop(text);// setting position to title
 		
 		Button login = new Button("Admin Login");
 		login.setStyle("-fx-background-color: white");
@@ -74,20 +75,36 @@ public class Main extends Application {
 
             @Override
             public void handle(MouseEvent mouseEvent) {
-            	if(mouseEvent.getClickCount() == 1){
-            		login.getScene().setRoot(inventory.InventoryInfo());  
+				MouseButton button = mouseEvent.getButton();
+				
+				if(button==MouseButton.PRIMARY){
+					login.getScene().setRoot(Global_Inventory_Management.InventoryInfo());  
                 }
-            	if(mouseEvent.getClickCount() == 2){
-            		login.setStyle("-fx-background-color: yellow");
+				else if(button==MouseButton.SECONDARY){
+                	login.setStyle("-fx-background-color: yellow");
                 }
-                           
             }
         });
-		
-		
-		
-		
+        
+        Button viewAllVending = new Button("View All Vending Machines");
+        viewAllVending.setStyle("-fx-background-color: white");
+        viewAllVending.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 12));
+		root.setTop(viewAllVending);
 
+		viewAllVending.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+				MouseButton button = mouseEvent.getButton();
+				
+				if(button==MouseButton.PRIMARY){
+					login.getScene().setRoot(Restock.VendingMachines());  
+                }
+				else if(button==MouseButton.SECONDARY){
+                	login.setStyle("-fx-background-color: yellow");
+                }
+            }
+        });
 		
 		// creating vbox
 		 VBox vBox = new VBox();
@@ -108,14 +125,16 @@ public class Main extends Application {
 	        Snack.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        
 	        	@Override
-	            public void handle(MouseEvent mouseEvent) {
-	        		if(mouseEvent.getClickCount() == 1){
-	        			Snack.getScene().setRoot(candy.SnacksScreen()); // will go to next screen(snack screen) when clicked 
+	        	public void handle(MouseEvent mouseEvent) {
+					MouseButton button = mouseEvent.getButton();
+					
+					if(button==MouseButton.PRIMARY){
+						Snack.getScene().setRoot(candy.SnacksScreen()); // will go to next screen(snack screen) when clicked
+	                }else if(button==MouseButton.SECONDARY){
+	                	Snack.setStyle("-fx-background-color: yellow");
+	        		
 	                }
-	            	if(mouseEvent.getClickCount() == 2){
-	            		Snack.setStyle("-fx-background-color: yellow");
-	                }
-	                            
+	        	      
 	            }
 	        });
 	        
@@ -135,18 +154,19 @@ public class Main extends Application {
 
 	            @Override
 	            public void handle(MouseEvent mouseEvent) {
-	            	if(mouseEvent.getClickCount() == 1){
-	            		Drink.getScene().setRoot(drink.DrinkScreen());
+					MouseButton button = mouseEvent.getButton();
+					
+					if(button==MouseButton.PRIMARY){
+	                    Drink.getScene().setRoot(drink.DrinkScreen());
+	                }else if(button==MouseButton.SECONDARY){
+	                	Drink.setStyle("-fx-background-color: yellow");
 	                }
-	            	if(mouseEvent.getClickCount() == 2){
-	            		Drink.setStyle("-fx-background-color: yellow");
-	                }
+	            	
 	                             
 	            }
 	        });
 	        
-	        //stage = primaryStage;
-	        
+	        //stage = primaryStage;	        
 	        vBox.getChildren().addAll( Snack, Drink);
 	        root.setLeft(vBox);
 
@@ -157,61 +177,6 @@ public class Main extends Application {
         launch(args);
     }
 
-    public  static GridPane checkOut()
-    {
-    	GridPane checkout = new GridPane();
-        checkout.setAlignment(Pos.CENTER);
-        checkout.setVgap(10);
-        checkout.setHgap(100);
-        
-        Label items = new Label("Items for checkout");
-        items.setTextFill(Color.web("WHITE"));
-    	items.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        checkout.add(items, 0, 0);
-        
-        Label price = new Label("Price");
-        price.setTextFill(Color.web("WHITE"));
-    	price.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        checkout.add(price, 1, 0);
-        
-        float total_price = 0f;
-        for(int i=0;i<stacklist.size();i++)// using for loop to get list of selected products 
-        {
-        	Label label = new Label(stacklist.get(i).name);
-        	label.setTextFill(Color.web("WHITE"));
-        	label.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 14));
-        	checkout.add(label, 0, i+1);
-        	
-        	total_price += stacklist.get(i).getPrice();
-        	Label labelprice = new Label("$"+Float.toString(stacklist.get(i).getPrice()));
-        	
-        	labelprice.setTextFill(Color.web("RED"));
-        	labelprice.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 14));
-        	checkout.add(labelprice, 1, i+1);
-        }
-        Label total = new Label("Total");
-        total.setTextFill(Color.web("WHITE"));
-    	total.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 24));
-        checkout.add(total, 0, stacklist.size()+1);
-        
-        total_price = Math.round(total_price * 100.0f)/100.0f;// rounding upto 2 points 
-        Label totalPrice = new Label("$"+Float.toString(total_price));// converting back to string
-        totalPrice.setTextFill(Color.web("RED"));
-        totalPrice.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        checkout.add(totalPrice, 1, stacklist.size()+1);
-        
-        final Button button = new Button("Done");// creating done button 
-        button.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent arg0) {
-            	stacklist.clear();
-            	button.getScene().setRoot(root);  // when done button is clicked will go to front of  the application        
-            }
-        });
-        checkout.setStyle("-fx-background-color: purple;");
-        checkout.add(button, 1, stacklist.size() + 3);
-       return checkout;
-   }
+    
     
 }

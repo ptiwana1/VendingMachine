@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -18,6 +19,11 @@ import javafx.scene.text.Text;
 
 public class Chips extends Snack {
 
+	
+	public static Global_Inventory_Management inventory = new Global_Inventory_Management();
+	//Initializing different objects to null
+	static Product Lays = null;
+	static Product Cheetos = null;
 	/*
 	 * Constructor for chips
 	 */
@@ -44,11 +50,11 @@ public class Chips extends Snack {
 	 * toString method 
 	 */
 	public String toString() {
-		return super.toString();
+		return "Chips";
 	}
 	
 	//Setting up screen for chips selection
-	public static VBox ChipsScreen()
+	public  static VBox ChipsScreen()
     {
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
@@ -75,15 +81,16 @@ public class Chips extends Snack {
 			//Selecting the chips when the user presses the button
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.StockChipsLays > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.ChipsLays.getStock() > 0)
 						// TODO Auto-generated method stub
 						{
-						Chips Lays = new Chips();
+						Lays = new Chips();
 						Lays.name = "Lays";
 						Lays.setPrice(3.59f);
 						Main.stacklist.push(Lays);
-						Main.inventory.stock("lays");
+						inventory.stock(Lays);
 						
 						}
 						else
@@ -96,7 +103,8 @@ public class Chips extends Snack {
 							alert.showAndWait();
 						}   
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+				else if(button==MouseButton.SECONDARY){
             		lays.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -118,17 +126,19 @@ public class Chips extends Snack {
 		cheetos.setFont(Font.font("Times New Roman", FontWeight.BOLD, FontPosture.REGULAR, 12));
 		
 		cheetos.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			//Selecting cheetos on pressing button
+			//Selecting Cheetos on pressing button
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockChipsCheetos > 0)
+				MouseButton button = mouseEvent.getButton();
+				
+				if(button == MouseButton.PRIMARY){
+					if(inventory.ChipsCheetos.getStock() > 0)
 					{
-					Chips Cheetos = new Chips();
-					Cheetos.name = "Cheetos";
-					Cheetos.setPrice(2.59f);
-					Main.stacklist.push(Cheetos);
-					Main.inventory.stock("cheetos");
+						Cheetos = new Chips();
+						Cheetos.name = "Cheetos";
+						Cheetos.setPrice(2.59f);
+						Main.stacklist.push(Cheetos);
+						inventory.stock(Cheetos);
 					}
 					else
 					{
@@ -140,9 +150,9 @@ public class Chips extends Snack {
 						alert.showAndWait();
 					}
                 }
-            	if(mouseEvent.getClickCount() == 2){
-            		cheetos.setStyle("-fx-background-color: yellow");
-                }
+				else if(button==MouseButton.SECONDARY){
+                		cheetos.setStyle("-fx-background-color: yellow");                  
+				}   
 				
 			}
 			
@@ -172,11 +182,11 @@ public class Chips extends Snack {
             	{
             		if(product.name == "Lays")
                 	{
-                		Main.inventory.cancelItem("lays");
+                		inventory.cancelItem(Lays);
                 	}
                 	else if(product.name == "Cheetos")
                 	{
-                		Main.inventory.cancelItem("cheetos");
+                		inventory.cancelItem(Cheetos);
                 	}
             	}    
             	else
@@ -192,7 +202,7 @@ public class Chips extends Snack {
 
             @Override
             public void handle(ActionEvent arg0) {
-                checkOut.getScene().setRoot(Main.checkOut());             
+                checkOut.getScene().setRoot(Dispenser.checkOut());             
             }
         });
         vBox.getChildren().addAll(lays,cheetos, button, buttonCancel, checkOut);

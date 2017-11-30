@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
@@ -19,6 +20,12 @@ import javafx.scene.text.Text;
 
 public class Gum extends Snack
 {
+	
+	public static Global_Inventory_Management inventory = new Global_Inventory_Management();
+	static Product hubbabubba = null;
+	static Product Strips = null;
+	static Product peppermint = null;
+	static Product trident = null;
 	/*
 	 * Constructor for gum
 	 */
@@ -44,11 +51,11 @@ public class Gum extends Snack
 	 * toString method 
 	 */
 	public String toString() {
-		return super.toString();
+		return "Gums";
 	}
 	
 	
-	public static GridPane GumScreen()
+	public  static GridPane GumScreen()
     {
         GridPane gridGum = new GridPane();
         gridGum.setHgap(40);
@@ -91,21 +98,21 @@ public class Gum extends Snack
             	//checking if the item to be removed is instance of Gum Class
             	if(product instanceof Gum)
             	{
-            		if(product.name == "Hubba")
+            		if(product.name == "HubbaBubba")
                 	{
-                		Main.inventory.cancelItem("hubba");
+                		inventory.cancelItem(hubbabubba);
                 	}
-                	else if(product.name == "gum")
+                	else if(product.name == "Strips")
                 	{
-                		Main.inventory.cancelItem("strips");
+                		inventory.cancelItem(Strips);
                 	}
                 	else if(product.name == "Peppermint")
                 	{
-                		Main.inventory.cancelItem("peppermint");
+                		inventory.cancelItem(peppermint);
                 	}
                 	else if(product.name == "Trident")
                 	{
-                		Main.inventory.cancelItem("trident");
+                		inventory.cancelItem(trident);
                 	}
             	}
             	
@@ -125,7 +132,7 @@ public class Gum extends Snack
 
             @Override
             public void handle(ActionEvent arg0) {
-            	checkOut.getScene().setRoot(Main.checkOut());             
+            	checkOut.getScene().setRoot(Dispenser.checkOut());             
             }
         });
         
@@ -145,15 +152,16 @@ public class Gum extends Snack
 
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockGumHubba > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if( inventory.GumHubba.getStock() > 0)
 					{
 					// TODO Auto-generated method stub
-					Gum hubba = new Gum();
-					hubba.name = "Hubba Bubba";
-					hubba.setPrice(1.59f);
-					Main.stacklist.push(hubba);
-					Main.inventory.stock("hubba");
+						hubbabubba = new Gum();
+						hubbabubba.name = "HubbaBubba";
+						hubbabubba.setPrice(1.59f);
+					Main.stacklist.push(hubbabubba);
+					inventory.stock(hubbabubba);
 					}
 					else
 					{
@@ -165,7 +173,9 @@ public class Gum extends Snack
 						alert.showAndWait();
 					}
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+
+				else if(button==MouseButton.SECONDARY){
             		hubba.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -189,15 +199,16 @@ public class Gum extends Snack
 		gum.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
 			@Override
-			public void handle(MouseEvent  mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockGumStrips > 0)
+			public void handle(MouseEvent mouseEvent) {
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.GumStrips.getStock() > 0)
 					{
-					Gum gum = new Gum();
-					gum.name = "Strips";
-					gum.setPrice(2.59f);
-					Main.stacklist.push(gum);
-					Main.inventory.stock("strips");
+						Strips = new Gum();
+						Strips.name = "Strips";
+						Strips.setPrice(2.59f);
+					Main.stacklist.push(Strips);
+					inventory.stock(Strips);
 					
 					}
 					else
@@ -211,7 +222,9 @@ public class Gum extends Snack
 						
 					}
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+
+            	if(button==MouseButton.SECONDARY){
             		gum.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -237,14 +250,15 @@ public class Gum extends Snack
 
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockGumPeppermint > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.Peppermint.getStock() > 0)
 					{
-					Gum Peppermint = new Gum();
-					Peppermint.name = "Peppermint";
-					Peppermint.setPrice(3.59f);
-					Main.stacklist.push(Peppermint);
-					Main.inventory.stock("peppermint");
+						peppermint = new Gum();
+						peppermint.name = "Peppermint";
+						peppermint.setPrice(3.59f);
+					Main.stacklist.push(peppermint);
+					inventory.stock(peppermint);
 					}
 					else
 					{
@@ -256,7 +270,9 @@ public class Gum extends Snack
 						alert.showAndWait();
 					} 
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+
+            	if(button==MouseButton.SECONDARY){
             		Peppermint.setStyle("-fx-background-color: yellow");
                 }
 				
@@ -283,14 +299,15 @@ public class Gum extends Snack
 
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if(mouseEvent.getClickCount() == 1){
-					if(Main.inventory.stockGumTrident > 0)
+				MouseButton button = mouseEvent.getButton();
+				if(button==MouseButton.PRIMARY){
+					if(inventory.Trident.getStock() > 0)
 					{
-					Gum Trident = new Gum();
-					Trident.name = "Trident";
-					Trident.setPrice(4.59f);
-					Main.stacklist.push(Trident);
-					Main.inventory.stock("trident");
+						trident = new Gum();
+						trident.name = "Trident";
+						trident.setPrice(4.59f);
+					Main.stacklist.push(trident);
+					inventory.stock(trident);
 					}
 					else
 					{
@@ -302,7 +319,9 @@ public class Gum extends Snack
 						alert.showAndWait();
 					}   
                 }
-            	if(mouseEvent.getClickCount() == 2){
+				//Adding second eventhandler; changing the background color of button to yellow on double click
+
+				else if(button==MouseButton.SECONDARY){
             		Trident.setStyle("-fx-background-color: yellow");
                 }
 				
